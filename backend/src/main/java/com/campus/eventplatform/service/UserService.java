@@ -5,4 +5,5 @@ import com.campus.eventplatform.entity.User;
 
 public interface UserService extends IService<User> {
     User findByUsername(String username);
+    void register(String username, String password);
 }

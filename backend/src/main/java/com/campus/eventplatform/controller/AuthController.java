@@ -2,6 +2,7 @@ package com.campus.eventplatform.controller;
 
 import com.campus.eventplatform.common.Result;
 import com.campus.eventplatform.dto.LoginReq;
+import com.campus.eventplatform.dto.RegisterReq;
 import com.campus.eventplatform.entity.User;
 import com.campus.eventplatform.service.UserService;
 import com.campus.eventplatform.util.JwtUtils;
@@ -40,5 +41,15 @@ public class AuthController {
         data.put("role", user.getRole());
         
         return Result.success(data);
+    }
+
+    @PostMapping("/register")
+    public Result<Void> register(@Valid @RequestBody RegisterReq req) {
+        try {
+            userService.register(req.getUsername(), req.getPassword());
+            return Result.success(null);
+        } catch (Exception e) {
+            return Result.error(400, e.getMessage());
+        }
     }
 }
