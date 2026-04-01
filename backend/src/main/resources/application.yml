@@ -5,13 +5,16 @@ spring:
   application:
     name: event-platform
   datasource:
-    url: jdbc:mysql://localhost:3306/campus_event_db?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://117.72.144.68:3306/campus_event_db?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: campus_user
     password: campus_password
     driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
   data:
     redis:
-      host: localhost
+      host: 117.72.144.68
       port: 6379
       password: redis_pass
       database: 0
