@@ -32,6 +32,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> 
                 auth.requestMatchers("/api/auth/**", "/error").permitAll()
                     .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/events/**").permitAll()
+                    .requestMatchers("/api/short-link/**").permitAll()
                     .anyRequest().authenticated()
             );
         

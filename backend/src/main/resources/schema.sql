@@ -26,6 +26,19 @@ CREATE TABLE IF NOT EXISTS `event` (
     `creator_id` BIGINT NOT NULL COMMENT '创建者ID',
     `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+     `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0未删除, 1已删除',
+     INDEX `idx_creator_id` (`creator_id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动表';
+
+CREATE TABLE IF NOT EXISTS `short_link` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `short_code` VARCHAR(10) NOT NULL UNIQUE COMMENT '短链码(Base62)',
+    `original_url` VARCHAR(1000) NOT NULL COMMENT '原始长链接',
+    `event_id` BIGINT COMMENT '关联的活动ID(可选)',
+    `creator_id` BIGINT COMMENT '创建者ID(可选)',
+    `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `expire_time` DATETIME COMMENT '过期时间(可选)',
     `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0未删除, 1已删除',
-    INDEX `idx_creator_id` (`creator_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动表';
+    INDEX `idx_short_code` (`short_code`),
+    INDEX `idx_event_id` (`event_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='短链接表';

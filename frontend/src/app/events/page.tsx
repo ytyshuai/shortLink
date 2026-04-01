@@ -2,12 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { eventApi, Event } from "@/api/event";
+import { shortLinkApi } from "@/api/shortLink";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+
+import { QRCodeSVG } from "qrcode.react";
 
 export default function EventsPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const [shortLink, setShortLink] = useState<{ [key: number]: string }>({});
   const router = useRouter();
 
   const fetchEvents = async () => {
@@ -46,6 +50,28 @@ export default function EventsPage() {
     }
   };
 
+  const handleShare = async (event: Event) => {
+    try {
+      if (shortLink[event.id]) {
+        return; // Already generated
+      }
+      const targetUrl = `${window.location.origin}/events/${event.id}`;
+      const res = await shortLinkApi.createShortLink({
+        originalUrl: targetUrl,
+        eventId: event.id
+      });
+      // @ts-ignore
+      if (res.code === 200) {
+        // @ts-ignore
+        const sLink = `http://localhost:8080/api/short-link/${res.data.shortCode}`;
+        setShortLink(prev => ({ ...prev, [event.id]: sLink }));
+      }
+    } catch (error) {
+      console.error("Failed to generate short link", error);
+      alert("Failed to generate short link");
+    }
+  };
+
   return (
     <div className="container mx-auto p-8">
       <div className="flex justify-between items-center mb-8">
@@ -69,7 +95,18 @@ export default function EventsPage() {
                 <p>👥 Capacity: {event.capacity === 0 ? "Unlimited" : event.capacity}</p>
                 <p>🏷️ Status: {event.status}</p>
               </div>
+              
+              {shortLink[event.id] && (
+                <div className="mb-4 p-4 bg-gray-50 rounded-md flex flex-col items-center gap-2">
+                  <p className="text-sm font-medium text-blue-600 break-all text-center">
+                    <a href={shortLink[event.id]} target="_blank" rel="noreferrer">{shortLink[event.id]}</a>
+                  </p>
+                  <QRCodeSVG value={shortLink[event.id]} size={100} />
+                </div>
+              )}
+
               <div className="flex justify-end gap-2 mt-auto">
+                <Button variant="outline" onClick={() => handleShare(event)}>Share</Button>
                 <Button variant="destructive" onClick={() => handleDelete(event.id)}>Delete</Button>
               </div>
             </div>

@@ -5,15 +5,16 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("user")
-public class User {
+@TableName("short_link")
+public class ShortLink {
     @TableId(type = IdType.AUTO)
     private Long id;
-    private String username;
-    private String password;
-    private String role;
+    private String shortCode;
+    private String originalUrl;
+    private Long eventId;
+    private Long creatorId;
     private LocalDateTime createTime;
-    private LocalDateTime updateTime;
+    private LocalDateTime expireTime;
     @TableLogic
     private Integer deleted;
 }
