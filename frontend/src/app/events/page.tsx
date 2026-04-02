@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { eventApi, Event } from "@/api/event";
 import { shortLinkApi } from "@/api/shortLink";
+import { enrollmentApi } from "@/api/enrollment";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -72,6 +73,22 @@ export default function EventsPage() {
     }
   };
 
+  const handleEnroll = async (eventId: number) => {
+    try {
+      const res = await enrollmentApi.enroll(eventId);
+      // @ts-ignore
+      if (res.code === 200) {
+        alert("Enrollment successful!");
+      } else {
+        // @ts-ignore
+        alert(res.msg);
+      }
+    } catch (error) {
+      console.error("Failed to enroll", error);
+      alert("Failed to enroll");
+    }
+  };
+
   return (
     <div className="container mx-auto p-8">
       <div className="flex justify-between items-center mb-8">
@@ -106,6 +123,7 @@ export default function EventsPage() {
               )}
 
               <div className="flex justify-end gap-2 mt-auto">
+                <Button onClick={() => handleEnroll(event.id)}>Enroll</Button>
                 <Button variant="outline" onClick={() => handleShare(event)}>Share</Button>
                 <Button variant="destructive" onClick={() => handleDelete(event.id)}>Delete</Button>
               </div>

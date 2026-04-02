@@ -42,3 +42,17 @@ CREATE TABLE IF NOT EXISTS `short_link` (
     INDEX `idx_short_code` (`short_code`),
     INDEX `idx_event_id` (`event_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='短链接表';
+
+CREATE TABLE IF NOT EXISTS `enrollment` (
+    `id` BIGINT AUTO_INCREMENT PRIMARY KEY,
+    `event_id` BIGINT NOT NULL COMMENT '活动ID',
+    `user_id` BIGINT NOT NULL COMMENT '报名用户ID',
+    `status` VARCHAR(20) NOT NULL DEFAULT 'PENDING' COMMENT '状态: PENDING(待审核), APPROVED(已通过), REJECTED(已拒绝), CANCELLED(已取消)',
+    `checkin_status` VARCHAR(20) NOT NULL DEFAULT 'UNCHECKED' COMMENT '签到状态: UNCHECKED(未签到), CHECKED(已签到)',
+    `checkin_time` DATETIME COMMENT '签到时间',
+    `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '报名时间',
+    `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted` TINYINT NOT NULL DEFAULT 0 COMMENT '逻辑删除: 0未删除, 1已删除',
+    UNIQUE KEY `uk_event_user` (`event_id`, `user_id`),
+    INDEX `idx_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动报名与签到表';

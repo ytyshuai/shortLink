@@ -5,18 +5,15 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("event")
-public class Event {
+@TableName("enrollment")
+public class Enrollment {
     @TableId(type = IdType.AUTO)
     private Long id;
-    private String title;
-    private String description;
-    private String location;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private Integer capacity;
-    private String status; // DRAFT, PUBLISHED, CANCELLED
-    private Long creatorId;
+    private Long eventId;
+    private Long userId;
+    private String status; // PENDING, APPROVED, REJECTED, CANCELLED
+    private String checkinStatus; // UNCHECKED, CHECKED
+    private LocalDateTime checkinTime;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
     @TableLogic
